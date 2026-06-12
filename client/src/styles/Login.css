@@ -1,0 +1,36 @@
+/* Add to Auth.css or separate file */
+.login-testimonial {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.login-testimonial-avatar {
+  width: 40px; height: 40px;
+  background: var(--gradient-brand);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: white;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.login-testimonial-text {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  line-height: 1.6;
+  margin-bottom: 0.3rem;
+}
+
+.login-testimonial-name {
+  font-size: 0.78rem;
+  opacity: 0.6;
+  font-style: italic;
+}
