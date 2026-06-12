@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, TrendingUp, ShieldCheck, Zap, ArrowRight } from 'lucide-react';
 import api from '../lib/api';
+import { useLanguage } from '../context/LanguageContext';
 import ItemCard from '../components/ItemCard';
 import '../styles/Home.css';
 import '../styles/ItemCard.css';
@@ -14,6 +15,7 @@ const DISTRICTS = [
 ];
 
 export default function Home() {
+  const { t } = useLanguage();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -68,14 +70,14 @@ export default function Home() {
         <div className="container hero-content">
           <div className="hero-badge animate-fadeInUp">
             <Zap size={13} />
-            Bihar's #1 Second-Hand Marketplace
+            {t('home_title')}
           </div>
           <h1 className="hero-title animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
-            Buy & Sell Old Things<br />
-            <span className="hero-title-accent">Across Bihar</span>
+            {t('home_title')}<br />
+            <span className="hero-title-accent">{t('home_subtitle')}</span>
           </h1>
           <p className="hero-subtitle animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-            Find great deals on used electronics, furniture, vehicles, and more — from sellers in your district.
+            {t('home_desc')}
           </p>
 
           {/* Search Bar */}
@@ -85,13 +87,13 @@ export default function Home() {
               <input
                 id="home-search"
                 type="text"
-                placeholder="Search for mobile, cycle, sofa, books..."
+                placeholder={t('home_search_placeholder')}
                 className="hero-search-input"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
               <button type="submit" className="btn btn-primary hero-search-btn">
-                Search
+                {t('home_search_btn')}
               </button>
             </div>
           </form>
@@ -100,17 +102,17 @@ export default function Home() {
           <div className="hero-stats animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
             <div className="hero-stat">
               <span className="hero-stat-num">{total}+</span>
-              <span className="hero-stat-label">Active Listings</span>
+              <span className="hero-stat-label">{t('home_active_listings')}</span>
             </div>
             <div className="hero-stat-divider" />
             <div className="hero-stat">
               <span className="hero-stat-num">38</span>
-              <span className="hero-stat-label">Districts Covered</span>
+              <span className="hero-stat-label">{t('home_districts')}</span>
             </div>
             <div className="hero-stat-divider" />
             <div className="hero-stat">
               <span className="hero-stat-num">100%</span>
-              <span className="hero-stat-label">Free to Use</span>
+              <span className="hero-stat-label">{t('home_free')}</span>
             </div>
           </div>
         </div>
@@ -128,7 +130,7 @@ export default function Home() {
                   className={`tag ${category === cat ? 'active' : ''}`}
                   onClick={() => setCategory(cat)}
                 >
-                  {cat}
+                  {t(`filter_${cat.toLowerCase().replace(/\s/g, '_')}`) || cat}
                 </button>
               ))}
             </div>
@@ -161,11 +163,10 @@ export default function Home() {
           <div className="listings-header">
             <div>
               <h2 className="section-title">
-                {category !== 'All' ? `${category} Listings` : 'Latest Listings'}
+                {category !== 'All' ? `${t(`filter_${category.toLowerCase().replace(/\s/g, '_')}`)} Listings` : t('home_latest')}
               </h2>
               <p className="section-subtitle">
                 {total} item{total !== 1 ? 's' : ''} found
-                {district !== 'All Districts' ? ` in ${district}` : ' across Bihar'}
               </p>
             </div>
             <Link to="/list-item" className="btn btn-primary">
@@ -184,10 +185,10 @@ export default function Home() {
           ) : items.length === 0 ? (
             <div className="empty-state">
               <div className="empty-state-icon">🔍</div>
-              <h3>No items found</h3>
+              <h3>{t('home_no_items')}</h3>
               <p>Try changing filters or be the first to sell in this category!</p>
               <Link to="/list-item" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-                Post an Item <ArrowRight size={16} />
+                {t('nav_sell')} <ArrowRight size={16} />
               </Link>
             </div>
           ) : (

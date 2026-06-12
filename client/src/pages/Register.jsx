@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { UserPlus, Eye, EyeOff, CheckCircle, Mail, Lock, User, Phone, MapPin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
 import '../styles/Auth.css';
@@ -25,6 +26,7 @@ export default function Register() {
   const [errors, setErrors] = useState({});
 
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const validate = () => {
@@ -92,20 +94,20 @@ export default function Register() {
           <div className="auth-form-wrapper">
             <div className="auth-form-header">
               <UserPlus size={28} className="auth-form-icon" />
-              <h1>Create Account</h1>
+              <h1>{t('auth_register_title')}</h1>
               <p>Fill in your details to get started</p>
             </div>
 
             <form onSubmit={handleSubmit} noValidate>
               <div className="form-row-2">
                 <div className="form-group">
-                  <label className="form-label" htmlFor="full_name">Full Name</label>
+                  <label className="form-label" htmlFor="full_name">{t('auth_name')}</label>
                   <input id="full_name" name="full_name" type="text" className="form-input"
                     placeholder="Rajan Kumar" value={form.full_name} onChange={handleChange} />
                   {errors.full_name && <span className="form-error">{errors.full_name}</span>}
                 </div>
                 <div className="form-group">
-                  <label className="form-label" htmlFor="phone">Phone Number</label>
+                  <label className="form-label" htmlFor="phone">{t('auth_phone')}</label>
                   <input id="phone" name="phone" type="tel" className="form-input"
                     placeholder="9876543210" value={form.phone} onChange={handleChange} maxLength={10} />
                   {errors.phone && <span className="form-error">{errors.phone}</span>}
@@ -153,12 +155,12 @@ export default function Register() {
 
               <button id="register-submit" type="submit" className="btn btn-primary btn-full btn-lg"
                 disabled={loading}>
-                {loading ? <><span className="btn-spinner" /> Registering...</> : <><UserPlus size={18} /> Create Account</>}
+                {loading ? 'Creating account...' : t('auth_register_title')}
               </button>
             </form>
 
             <p className="auth-switch">
-              Already have an account? <Link to="/login">Login here</Link>
+              {t('auth_has_account')} <Link to="/login">{t('auth_login_title')}</Link>
             </p>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
 import '../styles/Auth.css';
@@ -12,6 +13,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -63,13 +65,13 @@ export default function Login() {
           <div className="auth-form-wrapper">
             <div className="auth-form-header">
               <LogIn size={28} className="auth-form-icon" />
-              <h1>Sign In</h1>
-              <p>Enter your credentials to continue</p>
+              <h1>{t('auth_login_title')}</h1>
+              <p>Welcome back to BiharBazaar</p>
             </div>
 
-            <form onSubmit={handleSubmit} noValidate>
+            <form onSubmit={handleSubmit} className="auth-form-fields" noValidate>
               <div className="form-group">
-                <label className="form-label" htmlFor="email">Email Address</label>
+                <label className="form-label" htmlFor="email">{t('auth_email')}</label>
                 <input
                   id="login-email"
                   name="email"
@@ -83,8 +85,10 @@ export default function Login() {
               </div>
 
               <div className="form-group">
-                <label className="form-label" htmlFor="password">Password</label>
-                <div className="input-with-icon">
+                <div className="form-label-row">
+                  <label className="form-label" htmlFor="password">{t('auth_pass')}</label>
+                </div>
+                <div className="password-input-wrapper">
                   <input
                     id="login-password"
                     name="password"
@@ -100,17 +104,16 @@ export default function Login() {
                 </div>
               </div>
 
-              <button id="login-submit" type="submit" className="btn btn-primary btn-full btn-lg"
-                disabled={loading} style={{ marginTop: '0.5rem' }}>
+              <button id="login-submit" type="submit" className="btn btn-primary btn-full btn-lg" disabled={loading}>
                 {loading
-                  ? <><span className="btn-spinner" /> Signing in...</>
-                  : <><LogIn size={18} /> Sign In</>
+                  ? <><span className="btn-spinner" /> Logging in...</>
+                  : <><LogIn size={18} /> {t('auth_login_title')}</>
                 }
               </button>
             </form>
 
-            <p className="auth-switch" style={{ marginTop: '1.5rem' }}>
-              New to BiharBazaar? <Link to="/register">Create a free account</Link>
+            <p className="auth-bottom-text" style={{ marginTop: '1.5rem' }}>
+              {t('auth_no_account')} <Link to="/register">{t('auth_register_title')}</Link>
             </p>
           </div>
         </div>

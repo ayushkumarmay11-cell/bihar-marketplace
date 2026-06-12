@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Tag, ArrowUpRight } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import '../styles/ItemCard.css';
 
 const CATEGORY_EMOJIS = {
   Electronics: '📱',
@@ -19,6 +21,7 @@ const CONDITION_COLORS = {
 };
 
 export default function ItemCard({ item }) {
+  const { t } = useLanguage();
   const emoji = CATEGORY_EMOJIS[item.category] || '📦';
   const conditionClass = CONDITION_COLORS[item.condition] || 'badge-gray';
 
@@ -38,7 +41,7 @@ export default function ItemCard({ item }) {
         )}
         {item.is_sold && (
           <div className="item-card-sold-overlay">
-            <span>SOLD</span>
+            <span>{t('card_sold')}</span>
           </div>
         )}
         <div className="item-card-category-badge">

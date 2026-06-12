@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, MapPin, Phone, Tag, Calendar, User, CheckCircle, Share2, Heart } from 'lucide-react';
+import { ArrowLeft, MapPin, Phone, Tag, Calendar, User, CheckCircle, Share2, Heart, MessageSquare } from 'lucide-react';
 import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
 import '../styles/ItemDetail.css';
 
@@ -19,10 +20,11 @@ export default function ItemDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, isLoggedIn } = useAuth();
+  const { t } = useLanguage();
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [showPhone, setShowPhone] = useState(false);
+  const [startingChat, setStartingChat] = useState(false);
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -46,6 +48,18 @@ export default function ItemDetail() {
       toast.success('Link copied to clipboard!');
     } catch {
       toast.error('Could not copy link.');
+    }
+  };
+
+  const startChat = async () => {
+    setStartingChat(true);
+    try {
+      const res = await api.post('/api/chat/init', { itemId: item.id });
+      navigate(`/chat/${res.data.conversationId}`);
+    } catch (err) {
+      toast.error('Could not start chat. Please try again.');
+    } finally {
+      setStartingChat(false);
     }
   };
 
@@ -119,16 +133,16 @@ export default function ItemDetail() {
                 <MapPin size={15} /> <span>{item.location}, Bihar</span>
               </div>
               <div className="item-detail-meta-row">
-                <Calendar size={15} /> <span>Listed on {formattedDate}</span>
+                <Calendar size={15} /> <span>{t('detail_posted')} {formattedDate}</span>
               </div>
               <div className="item-detail-meta-row">
-                <Tag size={15} /> <span>{item.category} · {item.condition}</span>
+                <Tag size={15} /> <span>{t(`filter_${item.category.toLowerCase().replace(/\s/g, '_')}`)} · {item.condition}</span>
               </div>
             </div>
 
             <div className="divider" />
 
-            <h3 className="item-detail-section-label">Description</h3>
+            <h3 className="item-detail-section-label">{t('list_desc')}</h3>
             <p className="item-detail-description">{item.description}</p>
 
             <div className="divider" />
@@ -153,29 +167,19 @@ export default function ItemDetail() {
             {!isOwner && !item.is_sold && (
               <div className="item-detail-actions">
                 {isLoggedIn ? (
-                  showPhone ? (
-                    <a
-                      id="call-seller-btn"
-                      href={`tel:+91${item.profiles?.phone}`}
-                      className="btn btn-primary btn-full btn-lg"
-                    >
-                      <Phone size={18} />
-                      Call: +91 {item.profiles?.phone}
-                    </a>
-                  ) : (
-                    <button
-                      id="show-phone-btn"
-                      className="btn btn-primary btn-full btn-lg"
-                      onClick={() => setShowPhone(true)}
-                    >
-                      <Phone size={18} />
-                      Show Seller's Contact
-                    </button>
-                  )
+                  <button
+                    id="chat-seller-btn"
+                    className="btn btn-primary btn-full btn-lg"
+                    onClick={startChat}
+                    disabled={startingChat}
+                  >
+                    <MessageSquare size={18} />
+                    {startingChat ? 'Starting Chat...' : t('detail_chat')}
+                  </button>
                 ) : (
                   <Link to="/login" className="btn btn-primary btn-full btn-lg">
-                    <Phone size={18} />
-                    Login to Contact Seller
+                    <MessageSquare size={18} />
+                    {t('detail_chat_login')}
                   </Link>
                 )}
                 <button id="share-btn" className="btn btn-secondary" onClick={handleShare}>
